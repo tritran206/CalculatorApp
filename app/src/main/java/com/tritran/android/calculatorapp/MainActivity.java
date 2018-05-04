@@ -20,7 +20,12 @@ public class MainActivity extends AppCompatActivity {
     //creates instance of DecimalFormat to format our result as "#.##########"
     private DecimalFormat decimalFormat;
 
-
+    //this variable holds the operation we will carry out
+    private char CURRENT_ACTION;
+    private static final char ADDITION = '+';
+    private static final char SUBTRACTION = '-';
+    private static final char MULTIPLICATION = '*';
+    private static final char DIVISION = '/';
 
 
     @Override
@@ -110,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                computeCalculation();
+                CURRENT_ACTION = ADDITION;
                 binding.infoTextView.setText(decimalFormat.format(valueOne) + "+");
                 binding.editText.setText(null);
             }
@@ -118,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonSubtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                computeCalculation();
+                CURRENT_ACTION = SUBTRACTION;
                 binding.infoTextView.setText(decimalFormat.format(valueOne) + "-");
                 binding.editText.setText(null);
             }
@@ -126,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonMultiply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                computeCalculation();
+                CURRENT_ACTION = MULTIPLICATION;
                 binding.infoTextView.setText(decimalFormat.format(valueOne) + "*");
                 binding.editText.setText(null);
             }
@@ -134,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonDivide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                computeCalculation();
+                CURRENT_ACTION = DIVISION;
                 binding.infoTextView.setText(decimalFormat.format(valueOne) + "/");
                 binding.editText.setText(null);
             }
@@ -142,9 +155,11 @@ public class MainActivity extends AppCompatActivity {
         binding.buttonEqual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                computeCalculation();
                 binding.infoTextView.setText(binding.infoTextView.getText().toString() +
                         decimalFormat.format(valueTwo) + " = " + decimalFormat.format(valueOne));
                 valueOne = Double.NaN;
+                CURRENT_ACTION = '0';
     }
 });
 
@@ -165,5 +180,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void computeCalculation() {
+        if(!Double.isNaN(valueOne)) {
+            valueTwo = Double.parseDouble(binding.editText.getText().toString());
+            binding.editText.setText(null);
 
+            if(CURRENT_ACTION == ADDITION)
+                valueOne = this.valueOne + valueTwo;
+            else if(CURRENT_ACTION == SUBTRACTION)
+                valueOne = this.valueOne - valueTwo;
+            else if(CURRENT_ACTION == MULTIPLICATION)
+                valueOne = this.valueOne * valueTwo;
+            else if(CURRENT_ACTION == DIVISION)
+                valueOne = this.valueOne / valueTwo;
+        }
+        else {
+            try {
+                valueOne = Double.parseDouble(binding.editText.getText().toString());
+            }
+            catch (Exception e){}
+        }
+    }
 }
